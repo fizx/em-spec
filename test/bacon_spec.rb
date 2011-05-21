@@ -1,6 +1,5 @@
-require File.dirname(__FILE__) + '/../lib/em/spec'
 require 'bacon'
-require File.dirname(__FILE__) + '/../lib/em/spec/bacon'
+require File.dirname(__FILE__) + '/../lib/em-spec/bacon'
 
 EM.spec_backend = EventMachine::Spec::Bacon
 
@@ -48,5 +47,24 @@ EM.describe EventMachine do
   # it "should not block on failure" do
   #   1.should == 2
   # end
+
+end
+
+EM.describe EventMachine, "with time restrictions" do
+  default_timeout 2
+  
+  should 'succeed here' do
+    timeout(5)
+    EM.add_timer(3) { done }
+  end
+
+end
+
+EM.describe EventMachine, "with time restrictions" do
+  default_timeout 2
+  
+  should 'raise fail here' do
+    EM.add_timer(3) { done }
+  end
 
 end

@@ -1,18 +1,19 @@
-task :gem => :gemspec do
-  sh 'gem build em-spec.gemspec'
-end
+require 'rake/testtask'
+require 'rubygems'
+require 'bundler'
+Bundler::GemHelper.install_tasks
 
-task :gemspec do
-  
-end
+task :default => :spec
 
-task :install => :gem do
-  sh 'sudo gem install em-spec-*.gem'
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  t.test_files = FileList['test/test_spec.rb']
+  t.verbose = true
 end
-
-task :default => :gem
 
 task :spec do
-  sh 'bacon test/bacon_spec.rb'
-  sh 'spec -f specdoc test/rspec_spec.rb'
+  sh('rake test') rescue nil
+  sh('bacon test/bacon_spec.rb') rescue nil
+  sh 'spec -f specdoc test/rspec_spec.rb test/rspec_fail_examples.rb'
 end
+

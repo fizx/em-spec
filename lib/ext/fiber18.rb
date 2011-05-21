@@ -18,7 +18,11 @@ unless defined? Fiber
       @thread[:fiber] = self
     end
     attr_reader :thread
-
+    
+    def alive?
+      @thread.alive?
+    end
+    
     def resume *args
       raise FiberError, 'dead fiber called' unless @thread.alive?
       raise FiberError, 'double resume' if @thread == Thread.current
@@ -51,7 +55,7 @@ unless defined? Fiber
     end
   end
 else
-  require 'fiber'
+  require 'fiber' unless Fiber.respond_to?(:current)
 end
 
 if __FILE__ == $0
